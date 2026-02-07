@@ -1,0 +1,2 @@
+# Ai-dictionary
+Just jking
