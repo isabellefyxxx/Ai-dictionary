@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI搞笑辞典 - 一本正经地胡说八道</title>
+<meta name="description" content="AI时代生存必备词汇，一本正经地胡说八道的搞笑辞典">
+<meta property="og:title" content="AI搞笑辞典">
+<meta property="og:description" content="一本正经地胡说八道 · AI时代生存必备词汇">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=ZCOOL+KuaiLe&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:#F5F3ED;font-family:'Noto Serif SC',Georgia,serif;-webkit-font-smoothing:antialiased}
+
+.hero{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(255,107,107,.12) 0%,transparent 50%),radial-gradient(circle at 80% 50%,rgba(78,205,196,.1) 0%,transparent 50%)}
+.hero-badge{display:inline-block;padding:4px 16px;border:1px solid rgba(255,255,255,.25);border-radius:20px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:16px;font-family:'JetBrains Mono',monospace}
+.hero-title{font-size:clamp(36px,8vw,56px);font-weight:900;color:#fff;letter-spacing:4px;margin-bottom:8px;text-shadow:0 2px 20px rgba(255,107,107,.3)}
+.hero-sub{font-size:clamp(13px,3vw,16px);color:rgba(255,255,255,.55);letter-spacing:2px;margin-bottom:20px}
+.hero-stats{display:flex;justify-content:center;gap:20px;font-size:13px;color:rgba(255,255,255,.45)}
+.hero-stats span{display:flex;align-items:center;gap:4px}
+
+.toolbar{background:#fff;border-bottom:1px solid #e8e4dc;padding:16px 24px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.search-wrap{position:relative;max-width:480px;margin:0 auto 12px}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.4}
+.search-input{width:100%;padding:10px 16px 10px 40px;border:1.5px solid #e0dcd4;border-radius:10px;font-size:15px;font-family:inherit;background:#FAFAF7;outline:none;transition:all .2s}
+.search-input:focus{border-color:#0f3460;box-shadow:0 0 0 3px rgba(15,52,96,.08)}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:600px;margin:0 auto}
+.tag-btn{padding:5px 14px;border-radius:20px;border:none;font-size:12px;cursor:pointer;transition:all .2s;font-family:inherit}
+.tag-btn:hover{transform:scale(1.05)}
+
+.count-line{text-align:center;padding:16px;font-size:13px;color:#999;letter-spacing:1px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:0 24px 40px;max-width:1200px;margin:0 auto}
+
+.card-wrap{perspective:1000px;height:320px;cursor:pointer}
+.card-inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.card-wrap.flipped .card-inner{transform:rotateY(180deg)}
+.card-front,.card-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;overflow:hidden}
+
+.card-front{background:#fff;border:1px solid #e8e4dc;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;transition:box-shadow .3s}
+.card-wrap:hover .card-front{box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.card-emoji{font-size:48px;margin-bottom:16px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
+.card-term{font-size:22px;font-weight:900;color:#1a1a2e;margin-bottom:6px;letter-spacing:1px}
+.card-pinyin{font-size:12px;color:#999;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.card-pos{font-size:11px;color:#0f3460;background:rgba(15,52,96,.06);padding:2px 10px;border-radius:10px;margin-bottom:12px}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.card-tag{font-size:11px;padding:2px 8px;border-radius:8px}
+.card-num{position:absolute;top:12px;right:14px;font-size:10px;color:#ccc;font-family:'JetBrains Mono',monospace}
+.card-hint{position:absolute;bottom:12px;font-size:11px;color:#ccc;letter-spacing:1px}
+
+.card-back{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:24px;transform:rotateY(180deg);display:flex;flex-direction:column}
+.back-term{font-size:18px;font-weight:700;margin-bottom:4px}
+.back-pos{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+.back-def{font-size:14px;line-height:1.7;color:rgba(255,255,255,.85);flex:1;overflow-y:auto}
+.back-example{margin-top:14px;padding:12px;background:rgba(255,255,255,.08);border-radius:10px;font-size:12.5px;line-height:1.6;color:rgba(255,255,255,.6);border-left:3px solid rgba(255,107,107,.5)}
+.back-hint{text-align:center;font-size:11px;color:rgba(255,255,255,.3);margin-top:12px;letter-spacing:1px}
+
+.empty{text-align:center;padding:60px 24px;color:#999}
+.empty-emoji{font-size:48px;margin-bottom:12px}
+
+.footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:#bbb;line-height:1.8;letter-spacing:.5px}
+
+@media(max-width:640px){
+  .grid{grid-template-columns:1fr 1fr;gap:12px;padding:0 12px 32px}
+  .card-wrap{height:260px}
+  .card-front{padding:20px 14px}
+  .card-emoji{font-size:36px;margin-bottom:10px}
+  .card-term{font-size:17px}
+  .card-back{padding:16px}
+  .back-def{font-size:13px}
+  .back-example{font-size:11.5px;padding:10px}
+  .hero{padding:36px 16px 32px}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.card-wrap{animation:fadeUp .5s ease both}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">The Unofficial Guide</div>
+  <div class="hero-title">AI 搞笑辞典</div>
+  <div class="hero-sub">一本正经地胡说八道 · AI时代生存必备词汇</div>
+  <div class="hero-stats">
+    <span>📚 <span id="totalCount">30</span> 词条</span>
+    <span>🏷️ <span id="tagCount">0</span> 分类</span>
+    <span>🤖 v1.0</span>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" placeholder="搜索词条..." />
+  </div>
+  <div class="tag-row" id="tagRow"></div>
+</div>
+
+<div class="count-line" id="countLine"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" style="display:none">
+  <div class="empty-emoji">🤷</div>
+  <div style="font-size:16px;margin-bottom:6px">没有找到相关词条</div>
+  <div style="font-size:13px">试试其他关键词？</div>
+</div>
+
+<div class="footer">
+  本辞典纯属虚构，如有雷同说明你也是打工人 🫡<br>
+  AI搞笑辞典 · All Hallucinations Reserved © 2025
+</div>
+
+<script>
+const entries = [
+  { term:"AI开屏", pinyin:"AI kāi píng", pos:"动词短语", emoji:"🦚", definition:"以前打工是偷偷摸摸用AI偷懒，现在是为了显示自己有AI capability，每个活都说「这个我用了什么什么AI手法」。", example:"「你看我这个PPT，用了RAG检索增强加CoT思维链。」——其实就是问了ChatGPT一句话。", tags:["职场","装逼"] },
+  { term:"AI Blue", pinyin:"AI bù lǜ", pos:"名词", emoji:"😮‍💨", definition:"因AI发展太快而导致觉得自己无能，感到无力不已无法上班的请假事由。", example:"「组长，我今天AI Blue了，看到Sora出新版，感觉我做的视频毫无意义。」", tags:["情绪","摸鱼"] },
+  { term:"Prompt式求爱", pinyin:"Prompt shì qiú ài", pos:"名词", emoji:"💘", definition:"像写提示词一样精心设计每句话来追求心仪对象，反复调整措辞、语气和emoji配比，期待输出「我也喜欢你」。", example:"「我给她发了17个版本的消息，最后还是用Claude润色的那版。」", tags:["恋爱","社恐"] },
+  { term:"幻觉型汇报", pinyin:"huàn jué xíng huì bào", pos:"名词", emoji:"🫧", definition:"像大模型产生幻觉一样，在周报/月报中一本正经地编造自己其实没做过的工作内容，且细节丰富到连自己都快信了。", example:"「本周完成了用户增长策略的深度调研并输出方法论」——实际上刷了五天小红书。", tags:["职场","生存"] },
+  { term:"Token焦虑", pinyin:"Token jiāo lǜ", pos:"名词", emoji:"🪙", definition:"每次和AI对话时脑子里都在疯狂计算成本，说一句话前先想「这条值几分钱」，导致提问极度精简、惜字如金。", example:"「帮我写个方案」→ 发送 →「等等太短了它会不会理解错」→ 又舍不得补充 → 反复纠结。", tags:["抠门","技术"] },
+  { term:"Zero-shot相亲", pinyin:"Zero-shot xiāng qīn", pos:"名词", emoji:"🎯", definition:"没做任何背景调查、没看朋友圈、没问中间人就直接上场的相亲。通常结果也是zero。", example:"「你是做什么的？」「AI的。」「哦，那你能帮我修电脑吗？」——相亲结束。", tags:["恋爱","社死"] },
+  { term:"思维链式甩锅", pinyin:"sī wéi liàn shì shuǎi guō", pos:"名词", emoji:"⛓️", definition:"像Chain-of-Thought一样，一步一步、逻辑严密地把责任推导到别人身上，让你找不到任何反驳的切入点。", example:"「因为产品没定义清楚→所以设计方向偏了→所以开发理解错了→所以是产品的锅。」", tags:["职场","高阶"] },
+  { term:"大模型依赖症", pinyin:"dà mó xíng yī lài zhèng", pos:"名词", emoji:"🧠", definition:"连「今晚吃什么」都要问AI的症状。患者丧失独立决策能力，离开AI后出现焦虑、选择困难等戒断反应。", example:"「Claude，我现在在公司楼下，500米内有什么好吃的，要考虑我最近在减肥但今天心情不好。」", tags:["生活","上瘾"] },
+  { term:"RAG式社交", pinyin:"RAG shì shè jiāo", pos:"名词", emoji:"🔍", definition:"见面聊天前先检索一遍对方的朋友圈、微博、小红书和LinkedIn，建立完整的「知识库」后再假装自然地展开话题。", example:"「哎你也喜欢露营啊？」——其实昨晚翻了对方三年的朋友圈。", tags:["社交","心机"] },
+  { term:"Temperature社交", pinyin:"Temperature shè jiāo", pos:"名词", emoji:"🌡️", definition:"根据对方的身份和脾气实时调节自己说话的「温度参数」。对老板temperature=0（严谨），对同事=0.7（随意），对甲方=1.5（疯狂输出彩虹屁）。", example:"同一件事，给老板说「方案已完成」，给同事说「搞完了兄弟」，给甲方说「为您量身打造的创新解决方案已华丽呈现」。", tags:["职场","变脸"] },
+  { term:"上下文窗口记忆", pinyin:"shàng xià wén chuāng kǒu jì yì", pos:"名词", emoji:"🪟", definition:"老板的记忆模式——只记得最近那个窗口里你犯的错，更早之前你所有的功劳都已经被截断丢弃了。", example:"「小王啊，你上周那个报告怎么回事？」——上个月帮公司签下大单的事已经不在上下文里了。", tags:["职场","心酸"] },
+  { term:"Fine-tune式育儿", pinyin:"Fine-tune shì yù ér", pos:"名词", emoji:"👶", definition:"不断给孩子投喂「标准答案」和「正确行为」的训练数据，期待微调出一个完美小孩。过拟合后小孩在家表现优秀，出门完全不会举一反三。", example:"「宝贝，阿姨问你几岁要说五岁，问你喜欢什么要说喜欢读书，记住了吗？」", tags:["育儿","内卷"] },
+  { term:"对齐税", pinyin:"duì qí shuì", pos:"名词", emoji:"💸", definition:"为了让各部门/各方意见「对齐」而浪费的大量时间和精力。类似AI的alignment tax——为了安全和合规，牺牲了效率和快乐。", example:"「这个方案技术部说OK，产品部说要改，法务说要审，品牌说调性不对——光对齐就开了八个会。」", tags:["职场","内卷"] },
+  { term:"AI洗", pinyin:"AI xǐ", pos:"动词", emoji:"🫧", definition:"把任何传统业务前面加上「AI驱动」「智能」「大模型赋能」等前缀，估值立刻翻十倍的神奇操作。", example:"以前叫外卖APP，现在叫「AI驱动的智能餐饮推荐与即时配送平台」。融资PPT多了20页。", tags:["创业","装逼"] },
+  { term:"开源式分手", pinyin:"kāi yuán shì fēn shǒu", pos:"名词", emoji:"💔", definition:"分手后把所有聊天记录、恋爱经历全部公开到社交媒体上，供大家围观、fork和提issue。评论区比代码review还热闹。", example:"「我把我们的聊天记录发小红书了，三千赞，评论都说你是渣男。你要不要提个PR辩解一下？」", tags:["恋爱","社死"] },
+  { term:"System Prompt式家训", pinyin:"System Prompt shì jiā xùn", pos:"名词", emoji:"📜", definition:"父母在你小时候写入的底层指令，无论你后来接受了多少教育和社会毒打，某些行为模式就是改不掉。", example:"「我都35了，出门前还是会条件反射地检查有没有带钥匙、穿秋裤。」——我妈的system prompt太强了。", tags:["生活","育儿"] },
+  { term:"Batch式社交", pinyin:"Batch shì shè jiāo", pos:"名词", emoji:"📦", definition:"攒一堆消息一起回复，而不是实时响应。微信消息已读不回，等凑够一批再统一处理。", example:"周五晚上11点，一口气回复了本周所有消息。「在吗」「在」「你周一问的那个事，搞定了。」", tags:["社交","社恐"] },
+  { term:"Inference成本型约会", pinyin:"Inference chéng běn xíng yuē huì", pos:"名词", emoji:"🧮", definition:"约会前疯狂计算时间、金钱和情绪的投入产出比，如果ROI不达标就宁可在家跟AI聊天。", example:"「打车来回80，吃饭300，看电影120，聊天内容还没有Claude有深度……算了我不去了。」", tags:["恋爱","抠门"] },
+  { term:"版本回滚式复合", pinyin:"bǎn běn huí gǔn shì fù hé", pos:"名词", emoji:"⏪", definition:"和前任复合后试图回到之前某个甜蜜的版本，但发现代码已经改了太多，到处都是merge conflict。", example:"「我们回到刚在一起那时候好不好？」「可以，但你先把你新加的那些毛病revert一下。」", tags:["恋爱","心酸"] },
+  { term:"AI原住民", pinyin:"AI yuán zhù mín", pos:"名词", emoji:"👾", definition:"2024年后入职的新人，从第一天起就把AI当成理所当然的工具，完全不理解前辈们手动做Excel的痛苦。", example:"「前辈，你说的VLOOKUP是什么古代技术？我直接让AI写公式了。」", tags:["职场","代沟"] },
+  { term:"Safety式拒绝", pinyin:"Safety shì jù jué", pos:"名词", emoji:"🚫", definition:"像AI安全审核一样，用一堆冠冕堂皇的理由拒绝别人的合理请求。本质是不想干，但说出来特别正当。", example:"「这个需求涉及数据合规问题，需要法务评估，预计排期到下季度。」——其实就是不想改。", tags:["职场","高阶"] },
+  { term:"端侧智能型伴侣", pinyin:"duān cè zhì néng xíng bàn lǚ", pos:"名词", emoji:"📱", definition:"不需要联网查询就能在本地快速推断出你所有小心思的伴侣，延迟低、准确率高、完全无法越狱。", example:"你刚拿起手机，她：「又想打游戏？」你：「我就看个天气……」她：「你看天气不用笑。」", tags:["恋爱","生存"] },
+  { term:"Epoch式跳槽", pinyin:"Epoch shì tiào cáo", pos:"名词", emoji:"🔄", definition:"像模型训练一样，每个epoch（年度）都要把市面上所有公司遍历一遍来更新自己的参数（薪资）。", example:"「我不是频繁跳槽，我这是在做超参数调优。每次跳都是为了找到全局最优解。」", tags:["职场","生存"] },
+  { term:"幻觉式自信", pinyin:"huàn jué shì zì xìn", pos:"名词", emoji:"✨", definition:"像大模型一样，明明不会也能自信满满地瞎说，而且语气笃定到连自己都信了。", example:"「这个我可太熟了！」→ 回到工位疯狂搜索 →「刚确认了一下细节，方案如下——」", tags:["职场","生存"] },
+  { term:"RLHF式恋爱", pinyin:"RLHF shì liàn ài", pos:"名词", emoji:"👍", definition:"根据对方的正向/负向反馈不断调整自己的行为策略，久而久之已经完全不知道哪个是真实的自己了。", example:"「她说喜欢文艺的→我开始读诗→她说太装了→我改回直男→她说没情趣→我已经不知道我是谁了。」", tags:["恋爱","心酸"] },
+  { term:"多模态式加班", pinyin:"duō mó tài shì jiā bān", pos:"名词", emoji:"🖥️", definition:"同时用文字（微信）、语音（电话）、视频（腾讯会议）、图片（截图标注）等多种模态处理工作，每种模态都在加班。", example:"左手打字回微信，右手截图标bug，嘴里在开电话会，眼睛在看需求文档。这不是多模态是什么？", tags:["职场","内卷"] },
+  { term:"Embedding式友谊", pinyin:"Embedding shì yǒu yì", pos:"名词", emoji:"🫂", definition:"两个人看似关系很好（向量距离很近），但实际上处于完全不同的维度，聊深了就发现根本不在一个空间。", example:"「我以为我们是好朋友，结果我跟他聊AI他跟我聊星座，余弦相似度其实是0.02。」", tags:["社交","心酸"] },
+  { term:"Tokenizer式AA", pinyin:"Tokenizer shì AA", pos:"名词", emoji:"🔪", definition:"吃饭结账时像tokenizer切词一样，把账单拆分到令人发指的精确度。你喝了2/3瓶可乐就付2/3的钱。", example:"「你那个菜58，我那个43，米饭我吃了1.5碗你吃了2碗，按比例你付……等等我算算。」", tags:["社交","抠门"] },
+  { term:"Dropout式养生", pinyin:"Dropout shì yǎng shēng", pos:"名词", emoji:"🧘", definition:"像神经网络的Dropout层一样，随机屏蔽掉一些不健康习惯，但每次屏蔽的不一样，整体其实没啥改善。", example:"周一戒奶茶，周二戒熬夜，周三戒零食。但从来没同时戒过，总有一个在线。", tags:["生活","摸鱼"] },
+  { term:"Gradient Descent式减肥", pinyin:"Gradient Descent shì jiǎn féi", pos:"名词", emoji:"📉", definition:"体重像梯度下降一样，一开始掉得很快，后来越来越慢，最终卡在一个局部最优解（微胖）无法突破。", example:"「第一周瘦了5斤！第二周2斤……第三周……怎么还胖了？我是不是陷入鞍点了？」", tags:["生活","心酸"] }
+];
+
+const tagColors = {
+  "职场":{bg:"#FFF3E0",text:"#E65100"},"装逼":{bg:"#F3E5F5",text:"#7B1FA2"},
+  "情绪":{bg:"#E3F2FD",text:"#1565C0"},"摸鱼":{bg:"#E8F5E9",text:"#2E7D32"},
+  "恋爱":{bg:"#FCE4EC",text:"#C62828"},"社恐":{bg:"#EDE7F6",text:"#4527A0"},
+  "生存":{bg:"#FFF8E1",text:"#F57F17"},"抠门":{bg:"#E0F2F1",text:"#00695C"},
+  "技术":{bg:"#E8EAF6",text:"#283593"},"社死":{bg:"#FFEBEE",text:"#B71C1C"},
+  "高阶":{bg:"#212121",text:"#FFD54F"},"生活":{bg:"#F1F8E9",text:"#558B2F"},
+  "上瘾":{bg:"#FBE9E7",text:"#BF360C"},"社交":{bg:"#E0F7FA",text:"#00838F"},
+  "心机":{bg:"#F9FBE7",text:"#827717"},"变脸":{bg:"#FFF3E0",text:"#EF6C00"},
+  "心酸":{bg:"#ECEFF1",text:"#37474F"},"育儿":{bg:"#FFF9C4",text:"#F9A825"},
+  "内卷":{bg:"#FFCCBC",text:"#D84315"},"创业":{bg:"#B2DFDB",text:"#004D40"},
+  "代沟":{bg:"#D1C4E9",text:"#4A148C"}
+};
+
+let searchText = '', activeTag = null;
+const flipped = new Set();
+
+const allTags = [...new Set(entries.flatMap(e => e.tags))];
+document.getElementById('totalCount').textContent = entries.length;
+document.getElementById('tagCount').textContent = allTags.length;
+
+function renderTags() {
+  const row = document.getElementById('tagRow');
+  row.innerHTML = allTags.map(tag => {
+    const c = tagColors[tag] || {bg:"#eee",text:"#666"};
+    return `<button class="tag-btn" data-tag="${tag}" style="background:${activeTag===tag?c.text:c.bg};color:${activeTag===tag?'#fff':c.text};font-weight:${activeTag===tag?600:400}">#${tag}</button>`;
+  }).join('');
+  row.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.tag;
+      activeTag = activeTag === t ? null : t;
+      renderTags();
+      render();
+    });
+  });
+}
+
+function buildCard(e, gi) {
+  const c1 = tagColors[e.tags[0]] || {bg:"#eee",text:"#666"};
+  const tagsHtml = e.tags.map(t => {
+    const c = tagColors[t] || {bg:"#eee",text:"#666"};
+    return `<span class="card-tag" style="background:${c.bg};color:${c.text}">#${t}</span>`;
+  }).join('');
+  const isFlipped = flipped.has(gi);
+  return `<div class="card-wrap ${isFlipped?'flipped':''}" data-gi="${gi}" style="animation-delay:${(gi%12)*0.04}s">
+    <div class="card-inner">
+      <div class="card-front">
+        <span class="card-num">NO.${String(gi+1).padStart(3,'0')}</span>
+        <div class="card-emoji">${e.emoji}</div>
+        <div class="card-term">${e.term}</div>
+        <div class="card-pinyin">${e.pinyin}</div>
+        <div class="card-pos">${e.pos}</div>
+        <div class="card-tags">${tagsHtml}</div>
+        <div class="card-hint">👆 点击翻转</div>
+      </div>
+      <div class="card-back">
+        <div class="back-term">${e.term}</div>
+        <div class="back-pos">${e.pinyin} · ${e.pos}</div>
+        <div class="back-def">${e.definition}</div>
+        <div class="back-example">💬 ${e.example}</div>
+        <div class="back-hint">👆 点击翻回</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const s = searchText.toLowerCase();
+  const filtered = entries.filter(e => {
+    if (activeTag && !e.tags.includes(activeTag)) return false;
+    if (s && !e.term.toLowerCase().includes(s) && !e.definition.toLowerCase().includes(s) && !e.pinyin.toLowerCase().includes(s)) return false;
+    return true;
+  });
+
+  document.getElementById('countLine').textContent = activeTag
+    ? `「${activeTag}」分类 · ${filtered.length} 条`
+    : `共 ${filtered.length} 条词条 · 点击卡片翻转查看释义`;
+
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(e => buildCard(e, entries.indexOf(e))).join('');
+
+  grid.querySelectorAll('.card-wrap').forEach(card => {
+    card.addEventListener('click', () => {
+      const gi = parseInt(card.dataset.gi);
+      if (flipped.has(gi)) flipped.delete(gi); else flipped.add(gi);
+      card.classList.toggle('flipped');
+    });
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchText = e.target.value;
+  render();
+});
+
+renderTags();
+render();
+</script>
+</body>
+</html>
