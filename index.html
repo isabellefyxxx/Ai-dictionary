@@ -23,10 +23,36 @@ body{min-height:100vh;background:#F5F3ED;font-family:'Noto Serif SC',Georgia,ser
 .hero-stats span{display:flex;align-items:center;gap:4px}
 
 .toolbar{background:#fff;border-bottom:1px solid #e8e4dc;padding:16px 24px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
-.search-wrap{position:relative;max-width:480px;margin:0 auto 12px}
-.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.4}
-.search-input{width:100%;padding:10px 16px 10px 40px;border:1.5px solid #e0dcd4;border-radius:10px;font-size:15px;font-family:inherit;background:#FAFAF7;outline:none;transition:all .2s}
-.search-input:focus{border-color:#0f3460;box-shadow:0 0 0 3px rgba(15,52,96,.08)}
+.draw-wrap{text-align:center;margin-bottom:14px}
+.draw-btn{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;border:none;padding:12px 40px;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:2px;box-shadow:0 4px 15px rgba(238,90,36,.35);transition:all .25s;position:relative;overflow:hidden}
+.draw-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 6px 25px rgba(238,90,36,.45)}
+.draw-btn:active{transform:scale(.97)}
+.draw-btn .spark{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transform:translateX(-100%);transition:none}
+.draw-btn:hover .spark{animation:sparkle .6s ease}
+@keyframes sparkle{to{transform:translateX(100%)}}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.show{opacity:1;pointer-events:auto}
+
+.drawn-card{width:320px;max-width:88vw;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:20px;padding:32px 24px;color:#fff;text-align:center;transform:scale(.5) rotateY(90deg);transition:transform .5s cubic-bezier(.4,.2,.2,1);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.overlay.show .drawn-card{transform:scale(1) rotateY(0)}
+.drawn-emoji{font-size:64px;margin-bottom:16px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+.drawn-term{font-size:26px;font-weight:900;margin-bottom:6px;letter-spacing:2px}
+.drawn-pinyin{font-size:12px;color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.drawn-pos{display:inline-block;font-size:11px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.1);padding:2px 12px;border-radius:10px;margin-bottom:18px}
+.drawn-def{font-size:15px;line-height:1.75;color:rgba(255,255,255,.85);margin-bottom:16px;text-align:left}
+.drawn-example{text-align:left;padding:14px;background:rgba(255,255,255,.08);border-radius:12px;font-size:13px;line-height:1.65;color:rgba(255,255,255,.55);border-left:3px solid rgba(255,107,107,.5);margin-bottom:20px}
+.drawn-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.drawn-tag{font-size:11px;padding:3px 10px;border-radius:8px}
+.drawn-actions{display:flex;gap:10px;justify-content:center}
+.drawn-actions button{padding:10px 24px;border-radius:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-again{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff}
+.btn-again:hover{transform:scale(1.05)}
+.btn-close{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
+.btn-close:hover{background:rgba(255,255,255,.2)}
+
+@keyframes cardShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}75%{transform:rotate(-4deg)}}
+.shake{animation:cardShake .4s ease}
 .tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:600px;margin:0 auto}
 .tag-btn{padding:5px 14px;border-radius:20px;border:none;font-size:12px;cursor:pointer;transition:all .2s;font-family:inherit}
 .tag-btn:hover{transform:scale(1.05)}
@@ -93,11 +119,26 @@ body{min-height:100vh;background:#F5F3ED;font-family:'Noto Serif SC',Georgia,ser
 </div>
 
 <div class="toolbar">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" placeholder="搜索词条..." />
+  <div class="draw-wrap">
+    <button class="draw-btn" id="drawBtn" onclick="drawCard()">🎴 抽一张<span class="spark"></span></button>
   </div>
   <div class="tag-row" id="tagRow"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeDrawn(event)">
+  <div class="drawn-card" id="drawnCard">
+    <div class="drawn-emoji" id="drawnEmoji"></div>
+    <div class="drawn-term" id="drawnTerm"></div>
+    <div class="drawn-pinyin" id="drawnPinyin"></div>
+    <div class="drawn-pos" id="drawnPos"></div>
+    <div class="drawn-def" id="drawnDef"></div>
+    <div class="drawn-example" id="drawnExample"></div>
+    <div class="drawn-tags" id="drawnTags"></div>
+    <div class="drawn-actions">
+      <button class="btn-again" onclick="drawCard()">🎴 再抽一张</button>
+      <button class="btn-close" onclick="document.getElementById('overlay').classList.remove('show')">关闭</button>
+    </div>
+  </div>
 </div>
 
 <div class="count-line" id="countLine"></div>
@@ -144,7 +185,21 @@ const entries = [
   { term:"Embedding式友谊", pinyin:"Embedding shì yǒu yì", pos:"名词", emoji:"🫂", definition:"两个人看似关系很好（向量距离很近），但实际上处于完全不同的维度，聊深了就发现根本不在一个空间。", example:"「我以为我们是好朋友，结果我跟他聊AI他跟我聊星座，余弦相似度其实是0.02。」", tags:["社交","心酸"] },
   { term:"Tokenizer式AA", pinyin:"Tokenizer shì AA", pos:"名词", emoji:"🔪", definition:"吃饭结账时像tokenizer切词一样，把账单拆分到令人发指的精确度。你喝了2/3瓶可乐就付2/3的钱。", example:"「你那个菜58，我那个43，米饭我吃了1.5碗你吃了2碗，按比例你付……等等我算算。」", tags:["社交","抠门"] },
   { term:"Dropout式养生", pinyin:"Dropout shì yǎng shēng", pos:"名词", emoji:"🧘", definition:"像神经网络的Dropout层一样，随机屏蔽掉一些不健康习惯，但每次屏蔽的不一样，整体其实没啥改善。", example:"周一戒奶茶，周二戒熬夜，周三戒零食。但从来没同时戒过，总有一个在线。", tags:["生活","摸鱼"] },
-  { term:"Gradient Descent式减肥", pinyin:"Gradient Descent shì jiǎn féi", pos:"名词", emoji:"📉", definition:"体重像梯度下降一样，一开始掉得很快，后来越来越慢，最终卡在一个局部最优解（微胖）无法突破。", example:"「第一周瘦了5斤！第二周2斤……第三周……怎么还胖了？我是不是陷入鞍点了？」", tags:["生活","心酸"] }
+  { term:"Gradient Descent式减肥", pinyin:"Gradient Descent shì jiǎn féi", pos:"名词", emoji:"📉", definition:"体重像梯度下降一样，一开始掉得很快，后来越来越慢，最终卡在一个局部最优解（微胖）无法突破。", example:"「第一周瘦了5斤！第二周2斤……第三周……怎么还胖了？我是不是陷入鞍点了？」", tags:["生活","心酸"] },
+  { term:"Hallucination式研报", pinyin:"Hallucination shì yán bào", pos:"名词", emoji:"📊", definition:"券商分析师像大模型产生幻觉一样，用极其自信的语气给出完全离谱的目标价。数据详实、逻辑严密，就是跟现实没关系。", example:"「基于DCF模型和行业前景，我们给予目标价88元。」——发布时股价12元，三个月后股价8元。", tags:["投资","幻觉"] },
+  { term:"过拟合式抄底", pinyin:"guò nǐ hé shì chāo dǐ", pos:"名词", emoji:"🪣", definition:"根据历史K线图总结出一套精确到分钟的抄底模型，回测完美，实盘亏到怀疑人生。因为市场每次下跌的原因都不一样。", example:"「上次跌到这个支撑位就反弹了！」→ 抄底 → 跌穿 →「这次不一样……」→ 补仓 → 继续跌。", tags:["炒股","韭菜"] },
+  { term:"Transformer式庄家", pinyin:"Transformer shì zhuāng jiā", pos:"名词", emoji:"🎭", definition:"像Transformer的注意力机制一样，同时关注到市场上所有散户的仓位和情绪，然后精确地往你最痛的方向操作。", example:"你一买就跌，一卖就涨，一空仓就暴涨，一满仓就崩盘。你怀疑庄家的训练数据就是你的交易记录。", tags:["炒股","心酸"] },
+  { term:"Loss Function式炒股", pinyin:"Loss Function shì chǎo gǔ", pos:"名词", emoji:"💀", definition:"每一次交易都在优化损失函数——只不过是让损失越来越大。学习率设太高，直接梯度爆炸（爆仓）。", example:"「我在用真金白银做反向梯度下降，每次操作都精确地找到了亏损最大的方向。」", tags:["炒股","韭菜"] },
+  { term:"Few-shot式投资", pinyin:"Few-shot shì tóu zī", pos:"名词", emoji:"🎰", definition:"只看了两三个成功案例就觉得自己掌握了投资真谛，立刻All in。典型的小样本过拟合。", example:"「我同事买了XX币赚了十倍！我表哥炒期货买了房！」→ 入场 → 成为新的反面教材。", tags:["投资","韭菜"] },
+  { term:"Context Window式止损", pinyin:"Context Window shì zhǐ sǔn", pos:"名词", emoji:"🙈", definition:"只看最近的涨跌（上下文窗口）来决定是否止损，完全忘了自己的买入逻辑和长期判断。窗口一滑，心态全崩。", example:"「我是做长线的！」→ 跌了三天 →「不行我要止损！」→ 卖完第二天涨停 →「我是做长线的……」", tags:["炒股","心酸"] },
+  { term:"RAG式荐股", pinyin:"RAG shì jiàn gǔ", pos:"名词", emoji:"🗞️", definition:"从各种公众号、雪球、股吧检索一堆「利好消息」来给自己的持仓找理由，检索增强生成一套完美的持有逻辑，忽略所有利空。", example:"「你看，这个公众号说要涨，那个大V也看多，雪球上一片叫好——」「那你看看跌停板上写的啥？」", tags:["炒股","幻觉"] },
+  { term:"Alignment Tax式合规", pinyin:"Alignment Tax shì hé guī", pos:"名词", emoji:"⚖️", definition:"基金经理为了满足合规和风控要求而牺牲的收益。就像AI的对齐税一样，越安全越不赚钱。", example:"「这个机会我早就看到了，但风控说不能超配、合规说不能买、领导说再等等——等完了涨了200%。」", tags:["投资","心酸"] },
+  { term:"Temperature=2 式交易", pinyin:"Temperature=2 shì jiāo yì", pos:"名词", emoji:"🔥", definition:"Temperature调到最高的混乱交易状态：完全随机下单，追涨杀跌，一天操作几十次，输出极度不可控。", example:"早上看多满仓干，中午看空全清了，下午又觉得是洗盘杀回来，收盘一看手续费亏了500。", tags:["炒股","韭菜"] },
+  { term:"Pre-training式价投", pinyin:"Pre-training shì jià tóu", pos:"名词", emoji:"📚", definition:"花了三年读完了巴菲特所有书、芒格所有演讲、格雷厄姆全套理论，然后一上场还是追涨杀跌。预训练知识和实际推理完全脱节。", example:"「我熟读《聪明的投资者》！」→ 开盘看到涨停板 →「这个不一样，这是趋势投资！」", tags:["投资","幻觉"] },
+  { term:"Reinforcement Learning式割肉", pinyin:"RL shì gē ròu", pos:"名词", emoji:"🩸", definition:"通过反复亏损来「强化学习」正确的交易策略。理论上会越来越好，实际上本金先归零了，reward全是负的。", example:"「第一次亏了2万学到了不要追高，第二次亏了3万学到了不要抄底，第三次……钱没了，课上完了。」", tags:["炒股","韭菜"] },
+  { term:"Embedding式抱团", pinyin:"Embedding shì bào tuán", pos:"名词", emoji:"🐑", definition:"一群散户在同一个向量空间（股吧/微信群）里越聚越近，互相强化信念，形成信息茧房。集体冲进去，集体被埋。", example:"群里500人都说要涨，结果500人全套在山顶。后来群名从「财富自由」改成了「人间清醒互助会」。", tags:["炒股","韭菜"] },
+  { term:"Checkpoint式逃顶", pinyin:"Checkpoint shì táo dǐng", pos:"名词", emoji:"💾", definition:"每次赚钱都想着「再等等到了XX就卖」，结果从不保存利润（checkpoint），最后从盈利回撤到亏损，连最初的本金都回不去。", example:"「赚了30%不卖，等翻倍！」→ 回撤到+10% →「回到30%就卖！」→ 回撤到-5% →「回本就卖……」", tags:["炒股","心酸"] },
+  { term:"Multi-Agent式股灾", pinyin:"Multi-Agent shì gǔ zāi", pos:"名词", emoji:"💥", definition:"多个量化交易系统（Agent）同时触发止损，互相踩踏，形成正反馈循环，价格瞬间崩盘。AI版的集体踩踏事件。", example:"「A机器人卖了→B机器人检测到下跌也卖→C机器人跟着卖→闪崩了→人类交易员还在吃午饭。」", tags:["投资","技术"] }
 ];
 
 const tagColors = {
@@ -158,15 +213,49 @@ const tagColors = {
   "心机":{bg:"#F9FBE7",text:"#827717"},"变脸":{bg:"#FFF3E0",text:"#EF6C00"},
   "心酸":{bg:"#ECEFF1",text:"#37474F"},"育儿":{bg:"#FFF9C4",text:"#F9A825"},
   "内卷":{bg:"#FFCCBC",text:"#D84315"},"创业":{bg:"#B2DFDB",text:"#004D40"},
-  "代沟":{bg:"#D1C4E9",text:"#4A148C"}
+  "代沟":{bg:"#D1C4E9",text:"#4A148C"},
+  "投资":{bg:"#C8E6C9",text:"#1B5E20"},"炒股":{bg:"#FFCDD2",text:"#B71C1C"},
+  "韭菜":{bg:"#DCEDC8",text:"#33691E"},"幻觉":{bg:"#E1BEE7",text:"#6A1B9A"}
 };
 
-let searchText = '', activeTag = null;
+let activeTag = null;
 const flipped = new Set();
+let lastDrawn = -1;
 
 const allTags = [...new Set(entries.flatMap(e => e.tags))];
 document.getElementById('totalCount').textContent = entries.length;
 document.getElementById('tagCount').textContent = allTags.length;
+
+function drawCard() {
+  const pool = activeTag ? entries.filter(e => e.tags.includes(activeTag)) : entries;
+  if (pool.length === 0) return;
+  let idx;
+  do { idx = Math.floor(Math.random() * pool.length); } while (pool.length > 1 && entries.indexOf(pool[idx]) === lastDrawn);
+  const e = pool[idx];
+  lastDrawn = entries.indexOf(e);
+
+  const card = document.getElementById('drawnCard');
+  card.classList.add('shake');
+  setTimeout(() => card.classList.remove('shake'), 400);
+
+  document.getElementById('drawnEmoji').textContent = e.emoji;
+  document.getElementById('drawnTerm').textContent = e.term;
+  document.getElementById('drawnPinyin').textContent = e.pinyin;
+  document.getElementById('drawnPos').textContent = e.pos;
+  document.getElementById('drawnDef').textContent = e.definition;
+  document.getElementById('drawnExample').innerHTML = '💬 ' + e.example;
+  document.getElementById('drawnTags').innerHTML = e.tags.map(t => {
+    const c = tagColors[t] || {bg:"#eee",text:"#666"};
+    return `<span class="drawn-tag" style="background:${c.bg};color:${c.text}">#${t}</span>`;
+  }).join('');
+
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeDrawn(evt) {
+  if (evt && evt.target.id !== 'overlay' && !evt.target.classList.contains('btn-close')) return;
+  document.getElementById('overlay').classList.remove('show');
+}
 
 function renderTags() {
   const row = document.getElementById('tagRow');
@@ -216,10 +305,8 @@ function buildCard(e, gi) {
 function render() {
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
-  const s = searchText.toLowerCase();
   const filtered = entries.filter(e => {
     if (activeTag && !e.tags.includes(activeTag)) return false;
-    if (s && !e.term.toLowerCase().includes(s) && !e.definition.toLowerCase().includes(s) && !e.pinyin.toLowerCase().includes(s)) return false;
     return true;
   });
 
@@ -245,11 +332,6 @@ function render() {
     });
   });
 }
-
-document.getElementById('searchInput').addEventListener('input', e => {
-  searchText = e.target.value;
-  render();
-});
 
 renderTags();
 render();
